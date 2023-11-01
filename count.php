@@ -18,7 +18,8 @@ function dup()
 {
     error_log('dup');
     global $__STACK;
-    $top = reset($__STACK);
+    $top = array_pop($__STACK);
+    array_push($__STACK, $top);
     array_push($__STACK, $top);
 }
 
