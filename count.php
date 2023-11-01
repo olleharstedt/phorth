@@ -74,8 +74,8 @@ class counter
     public $cell = 0;
     public function __invoke()
     {
-        global $__STACK;
         error_log('counter::__invoke');
+        global $__STACK;
         array_push($__STACK, $this);
         dup();
         fetch();
