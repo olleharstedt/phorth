@@ -1,0 +1,9 @@
+11:43 < GeDaMo> create a name; allocate some data space; when the name is called, call the does> part with the address of the allocated space
+
+08:52 < olle> https://softwareengineering.stackexchange.com/questions/339283/forth-how-do-create-and-does-work-exactly
+
+14:47 < GeDaMo> .s will print out the top few values on the data stack
+
+https://ideone.com/bCAEf9
+
+https://forth.sourceforge.net/standard/dpans/dpans6.htm#6.1.0010
