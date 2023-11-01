@@ -70,14 +70,24 @@ function one_plus()
     array_push($__STACK, $top);
 }
 
-class counter
+class base
+{
+    public function __invoke()
+    {
+        error_log('base::__invoke');
+        global $__STACK;
+        array_push($__STACK, $this);
+    }
+}
+
+class counter extends base
 {
     public $cell = 0;
     public function __invoke()
     {
+        parent::__invoke();
         error_log('counter::__invoke');
         global $__STACK;
-        array_push($__STACK, $this);
         dup();
         fetch();
         tuck();
