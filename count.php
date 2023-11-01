@@ -22,9 +22,9 @@ function dup()
     array_push($__STACK, $top);
 }
 
-function at()
+function fetch()
 {
-    error_log('at');
+    error_log('fetch');
     global $__STACK;
     $top = array_pop($__STACK);
     array_push($__STACK, $top->cell);
@@ -78,7 +78,7 @@ class counter
         error_log('counter::__invoke');
         array_push($__STACK, $this);
         dup();
-        at();
+        fetch();
         tuck();
         one_plus();
         swap();
