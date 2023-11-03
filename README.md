@@ -62,4 +62,4 @@ Not sure these makes sense for a scripting lang.
 
 IF is compile-time only.
 
-
+Use Forth to programmatically create PHP code?
