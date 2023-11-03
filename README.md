@@ -62,4 +62,23 @@ Not sure these makes sense for a scripting lang.
 
 IF is compile-time only.
 
-Use Forth to programmatically create PHP code?
+Use Forth to programmatically create PHP code? They write to a PHP-file.
+
+> 15:49 < veltas> ." is what you want, gforth lets you redirect I/O
+
+
+    : startphp
+        s" tmp.php" w/o create-file throw Value fd-out
+        s\" <?php\n" fd-out write-line
+        ;
+    : w fd-out write-line ;
+    : helloworld s\" echo \"Hello world!\n\";" fd-out write-line ;
+    : echo
+        s" echo" w
+        w
+        s\" ;\n" w
+        ;
+    : endphp fd-out close-file throw ;
+
+    S" <?php echo 'hello world' . PHP_EOL;" fd-out write-line
+
