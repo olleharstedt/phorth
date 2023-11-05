@@ -1,6 +1,5 @@
 vocabulary php_args \ The php_args word list is open only when writing down arguments to a function
-php_args also
-definitions
+php_args also definitions
 \ order cr
 : string "string" type ;
 previous Forth definitions
@@ -36,6 +35,11 @@ previous Forth definitions
 fn foo
 \ TODO: string $html or assume $payload, always only one argument and always `mixed`?
 returns string
+                        \ $payload is on stack
+\ []                    \ Write array to temporary variable $t, put it on stack
+\ "strip_tags" true =>  \ Use variable on stack
+\ new HtmlConverter     \ Use variable on stack as input to constructor, set variable to $t
+\ -> convert            \ Call method convert on variable on stack, use next item on stack as input
 endfn
 
 foo
