@@ -24,6 +24,8 @@ Compile mode. Interpret mode.
 
     [ 1 2 3 ]
 
+But then `[` must be prefix, similar to `."`?
+
 Immediate words? Always executed, even if in compile mode.
 
 VALUE, VARIABLE, CONSTANT
@@ -45,6 +47,13 @@ Does not make sense without allocating memory to that entry.
 
 CREATE variable, function, class, array in PHP?
 
+https://forums.atariage.com/topic/270972-tutorial-arrays-in-forth/
+
+> The [] word
+
+    1 2 3 []
+    $a $b $c []
+
 What's postfix and what's prefix, and why? And how to create both types of words?
 
 Execution token, xt:
@@ -65,20 +74,3 @@ IF is compile-time only.
 Use Forth to programmatically create PHP code? They write to a PHP-file.
 
 > 15:49 < veltas> ." is what you want, gforth lets you redirect I/O
-
-
-    : startphp
-        s" tmp.php" w/o create-file throw Value fd-out
-        s\" <?php\n" fd-out write-line
-        ;
-    : w fd-out write-line ;
-    : helloworld s\" echo \"Hello world!\n\";" fd-out write-line ;
-    : echo
-        s" echo" w
-        w
-        s\" ;\n" w
-        ;
-    : endphp fd-out close-file throw ;
-
-    S" <?php echo 'hello world' . PHP_EOL;" fd-out write-line
-
