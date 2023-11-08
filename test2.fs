@@ -16,7 +16,7 @@ previous Forth definitions
     "$payload"
     \ php_args also
     \ order cr
-    does> count type s" (...)" type cr ;
+    does> count type s" (...)," type cr ;
 
 : returns 
     parse-name "): " type type cr "{" type cr 
@@ -98,18 +98,23 @@ fn firstText
 
 cr
 
+\ TODO: Separate vocabulary
+
 warnings off
-: new parse-name "new " type type "()" type ;
+: new parse-name "new " type type "()," type cr ;
 warnings on
 
 : pipe "$result = pipe(" type cr ;
 
+: end ")" type cr ;
+
 : run "->run()" type cr ;
 
 pipe
+    new FileGetContents
     htmlToMarkdown
     firstText
-    new FileGetContents
+    end
     run
 
 cr
