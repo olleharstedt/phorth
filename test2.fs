@@ -30,8 +30,8 @@ previous Forth definitions
 : $t "$t" ;
 
 \ Sets variable on top of stack to empty array [], leaves same variable on stack
-( $t -- $t )
-: [] 2dup type " = [];" type cr ;
+( -- $t )
+: [] "$t" 2dup type " = [];" type cr ;
 
 warnings off
 ( -- )
@@ -51,11 +51,15 @@ warnings on
     2r>       \ Put $t back on stack
 ;
 
-( $x <name> -- )
-: new parse-name "new " type type "(" type type ")" type cr ;
+( $x <name> -- $t )
+: new parse-name "$t = " type "new " type type "(" type type ");" type cr "$t" ;
 
 ( -- )
 : return "return " type ;
+
+( $t $obj -- )
+: -> type parse-name "->" type type "(" type type ")" type cr ";" type
+   ; 
 
 \ : fn  ( "foo" -- "function foo lparen rparen" )
     \ >in @  create >in ! here bl parse s,
@@ -71,9 +75,10 @@ warnings on
 <?php
 
 fn foo
-    $t []
+    []
     "strip_tags" true =>
     new HtmlConverter
+    -> convert
 \ TODO: string $html or assume $payload, always only one argument and always `mixed`?
                         \ $payload is on stack
 \ []                    \ Write array to temporary variable $t, put it on stack
