@@ -101,7 +101,7 @@ cr
 \ TODO: Separate vocabulary
 
 warnings off
-: new parse-name "new " type type "()," type cr ;
+: io parse-name "new " type type "()," type cr ;
 warnings on
 
 : pipe "$result = pipe(" type cr ;
@@ -111,7 +111,7 @@ warnings on
 : run "->run()" type cr ;
 
 pipe
-    new FileGetContents
+    io FileGetContents
     htmlToMarkdown
     firstText
     end
