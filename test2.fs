@@ -98,9 +98,16 @@ fn firstText
 
 cr
 
-htmlToMarkdown
-firstText
-new FileGetContents
+warnings off
+: new parse-name "new " type type "()" type ;
+warnings on
+
+: pipe "$result = pipe(" type cr ;
+
+pipe
+    htmlToMarkdown
+    firstText
+    new FileGetContents
 
 cr
 bye
