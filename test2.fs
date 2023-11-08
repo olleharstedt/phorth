@@ -16,7 +16,7 @@ previous Forth definitions
     "$payload"
     \ php_args also
     \ order cr
-    does> count type s" ()" type ;
+    does> count type s" (...)" type cr ;
 
 : returns 
     parse-name "): " type type cr "{" type cr 
@@ -28,6 +28,8 @@ previous Forth definitions
 
 \ Push temporary variable on stack
 : $t "$t" ;
+
+: null "null" ;
 
 \ Sets variable on top of stack to empty array [], leaves same variable on stack
 ( -- $t )
@@ -54,12 +56,11 @@ warnings on
 ( $x <name> -- $t )
 : new parse-name "$t = " type "new " type type "(" type type ");" type cr "$t" ;
 
-( -- )
-: return "return " type ;
+( $t -- )
+: return "return " type type ";" type cr "}" type cr ;
 
 ( $t $obj -- )
-: -> type parse-name "->" type type "(" type type ")" type cr ";" type
-   ; 
+: -> type parse-name "->" type type "(" type type ")" type ";" type cr "$t" ; 
 
 \ : fn  ( "foo" -- "function foo lparen rparen" )
     \ >in @  create >in ! here bl parse s,
@@ -68,26 +69,38 @@ warnings on
 
 \ 8 emit \ 8 is the back-delete button ascii char
 
+( $length $offset $string -- $t )
+: substr 
+    "$t = substr(" type type ", " type . ", " type . ");" type cr "$t" ;
+
 \ ---
 \ Program begins here
 \ ---
 
 <?php
 
-fn foo
-    []
-    "strip_tags" true =>
-    new HtmlConverter
-    -> convert
-\ TODO: string $html or assume $payload, always only one argument and always `mixed`?
-                        \ $payload is on stack
-\ []                    \ Write array to temporary variable $t, put it on stack
-\ "strip_tags" true =>  \ Use variable on stack
-\ new HtmlConverter     \ Use variable on stack as input to constructor, set variable to $t
-\ -> convert            \ Call method convert on variable on stack, use next item on stack as input
-endfn
+\ @param mixed $payload
+\ @return mixed
+fn htmlToMarkdown
+    []                    \ Create new array for temporary variable $t
+    "strip_tags" true =>  \ Access array, assuming it's top of stack
+    new HtmlConverter     \ Eat $t on top of stack for constructor, and assign new $t
+    -> convert            \ Call method 'convert' on top of stack, eat top of stack as argument to method, leave $t on top
+    return                \ Return top of stack and end function
 
-foo
+fn firstText
+        \ $payload is on top of stack at function start
+    50  \ length
+    0   \ offset
+    2swap   \ Put $payload at top
+    substr 
+    return
+
+cr
+
+htmlToMarkdown
+firstText
+new FileGetContents
 
 cr
 bye
