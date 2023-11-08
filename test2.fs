@@ -104,10 +104,13 @@ warnings on
 
 : pipe "$result = pipe(" type cr ;
 
+: run "->run()" type cr ;
+
 pipe
     htmlToMarkdown
     firstText
     new FileGetContents
+    run
 
 cr
 bye
