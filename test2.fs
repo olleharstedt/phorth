@@ -8,21 +8,38 @@ php_args also definitions
 previous Forth definitions
 \ order cr
 
-: <?php "<?php" type cr cr ;
+: <?phorth "<?php" type cr cr ;
 
+\ Generate function _and_ a word to call that function
 : fn ( "foo" -- "function foo lparen rparen" )
-    >in @ create >in ! here >r bl parse dup >r dup c, here swap cmove r> 1+ allot
+    >in @ create >in ! here >r
+    bl parse        \ Parse until next blank
+    dup >r dup c, here swap cmove r> 1+ allot
     "function " type r> count type "(mixed $payload): mixed" type cr "{" type cr
     "$payload"
     \ php_args also
     \ order cr
-    does> count type s" (...)," type cr ;
+    does> count type s" (...)," type cr
+    ;
 
+\ All functions must end with a return, which will return the variable on top of stack
+\ (probably the payload)
 : returns 
     parse-name "): " type type cr "{" type cr 
     previous previous
     \ order cr
-;
+    ;
+
+\ Generate and IO class _and_ a word to invoke it
+\ TODO: Effect type hierarchy
+: io ( "foo" -- ? )
+    \ Same code as for fn
+    >in @ create >in ! here >r
+    bl parse        \ Parse until next blank
+    dup >r dup c, here swap cmove r> 1+ allot
+    "class " type r> count type "{" type cr "}" type
+    does> count type s" (...)," type cr
+    ;
 
 : endfn "}" type cr ;
 
@@ -77,7 +94,7 @@ warnings on
 \ Program begins here
 \ ---
 
-<?php
+<?phorth
 
 \ @param mixed $payload
 \ @return mixed
@@ -100,9 +117,9 @@ cr
 
 \ TODO: Separate vocabulary
 
-warnings off
-: io parse-name "new " type type "()," type cr ;
-warnings on
+\ warnings off
+\ : io parse-name "new " type type "()," type cr ;
+\ warnings on
 
 : pipe "$result = pipe(" type cr ;
 
@@ -111,7 +128,6 @@ warnings on
 : run "->run()" type cr ;
 
 pipe
-    io FileGetContents
     htmlToMarkdown
     firstText
     end
